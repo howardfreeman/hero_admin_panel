@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { addHero } from "../../actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHttp } from "../../hooks/http.hook";
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -14,10 +15,12 @@ import { useDispatch } from "react-redux";
 // данных из фильтров
 
 const HeroesAddForm = () => {
+    const { filters, filtersLoadingStatus } = useSelector(state => state);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [element, setElement] = useState('');
     const dispatch = useDispatch();
+    const { request } = useHttp();
 
     const onInputChange = (event) => {
         const target = event.target;
@@ -53,10 +56,47 @@ const HeroesAddForm = () => {
 
         dispatch(addHero(hero));
 
+        const jsonHero = JSON.stringify(hero);
+        request('http://localhost:3001/heroes', 'POST', jsonHero)
+            .catch(err => {
+                throw new Error(`Error occured: ${err}`)
+            });
+
         setName('');
         setDescription('');
         setElement('');
     }
+
+    const renderOptions = (filters) => {
+        if(!filters.length) {
+            return null;
+        }
+
+        const filtersWithoutAll = filters.filter(({filter}) => filter !== 'all');
+
+        return filtersWithoutAll.map(({filter, label}) => {
+            return <option key={uuidv4()} value={filter}>{label}</option>
+        })
+    }
+
+    const setOptions = (loadingStatus, Component) => {
+        switch(loadingStatus) {
+            case 'loading':
+                return null
+            case 'idle':
+                return <Component/>
+            case 'error':
+                return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+            default:
+                throw new Error('Unexpected loading status')
+        }
+    }
+
+    const options = useMemo(() => {
+        return setOptions(filtersLoadingStatus, () => renderOptions(filters));
+
+        // eslint-disable-next-line
+    }, [filtersLoadingStatus]);
 
     return (
         <form className="border p-4 shadow-lg rounded" onSubmit={onHeroSubmit} >
@@ -99,10 +139,7 @@ const HeroesAddForm = () => {
                     onChange={onInputChange}
                 >
                     <option value="" >Я владею элементом...</option>
-                    <option value="fire">Огонь</option>
-                    <option value="water">Вода</option>
-                    <option value="wind">Ветер</option>
-                    <option value="earth">Земля</option>
+                    {options}
                 </select>
             </div>
 

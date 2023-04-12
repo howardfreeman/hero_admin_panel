@@ -1,6 +1,5 @@
 {
-    "heroes": [
-        {
+    "heroes": [{
             "id": 1,
             "name": "Первый герой",
             "description": "Первый герой в рейтинге!",
@@ -19,8 +18,7 @@
             "element": "water"
         }
     ],
-    "filters": [
-        {
+    "filters": [{
             "filter": "all",
             "label": "Все"
         },
