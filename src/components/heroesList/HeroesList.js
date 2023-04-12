@@ -1,4 +1,4 @@
-import {useHttp} from '../../hooks/http.hook';
+import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,10 +15,11 @@ const HeroesList = () => {
     const {heroes, heroesLoadingStatus, selected} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
+    const BASE_URL = 'http://localhost:3001';
 
     useEffect(() => {
         dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
+        request(`${BASE_URL}/heroes`)
             .then(data => dispatch(heroesFetched(data)))
             .catch(() => dispatch(heroesFetchingError()))
 
@@ -29,6 +30,14 @@ const HeroesList = () => {
         return <Spinner/>;
     } else if (heroesLoadingStatus === "error") {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    }
+
+    const onDeleteHero = (id) => {
+        dispatch(deleteHero(id));
+        request(`${BASE_URL}/heroes/${id}`, 'DELETE')
+            .catch(err => {
+                throw new Error(`Error occured: ${err}`)
+            });
     }
 
     const renderHeroesList = (heroes) => {
@@ -45,7 +54,7 @@ const HeroesList = () => {
         })
 
         return visibleHeroes.map(({id, ...props}) => {
-            return <HeroesListItem onHeroDelete={() => dispatch(deleteHero(id))} key={id} {...props}/>
+            return <HeroesListItem onDeleteHero={() => onDeleteHero(id)} key={id} {...props}/>
         })
     }
 
