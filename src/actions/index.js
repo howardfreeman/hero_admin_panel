@@ -24,9 +24,9 @@ export const heroDeleted = (id) => {
     }
 }
 
-export const addHero = (hero) => {
+export const heroCreated = (hero) => {
     return {
-        type: 'ADD_HERO',
+        type: 'HERO_CREATED',
         payload: hero
     }
 }

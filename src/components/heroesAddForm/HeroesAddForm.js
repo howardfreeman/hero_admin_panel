@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { addHero } from "../../actions";
+import { heroCreated } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useHttp } from "../../hooks/http.hook";
 
@@ -19,7 +19,7 @@ const HeroesAddForm = () => {
     const [heroDescr, setHeroDescr] = useState('');
     const [heroElement, setHeroElement] = useState('');
 
-    const { filters, filtersLoadingStatus } = useSelector(state => state);
+    const { filters, filtersLoadingStatus } = useSelector(state => state.filters);
     
     const dispatch = useDispatch();
     const { request } = useHttp();
@@ -36,7 +36,7 @@ const HeroesAddForm = () => {
 
         request('http://localhost:3001/heroes', 'POST', JSON.stringify(hero))
             .then(data => console.log('Added', data))
-            .then(dispatch(addHero(hero)))
+            .then(dispatch(heroCreated(hero)))
             .catch(err => console.error(`Error: ${err}`));
 
         setHeroName('');
