@@ -17,9 +17,9 @@ export const heroesFetchingError = () => {
     }
 }
 
-export const deleteHero = (id) => {
+export const heroDeleted = (id) => {
     return {
-        type: 'DELETE_HERO',
+        type: 'HERO_DELETED',
         payload: id
     }
 }
@@ -50,9 +50,9 @@ export const filterFetchingError = () => {
     }
 }
 
-export const changeSelected = (selected) => {
+export const activeFilterChanged = (active) => {
     return {
-        type: 'SELECTED_CHANGED',
-        payload: selected
+        type: 'ACTIVE_FILTER_CHANGED',
+        payload: active
     }
 }
