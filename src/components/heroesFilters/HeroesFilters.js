@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import { useHttp } from '../../hooks/http.hook';
 import { useSelector, useDispatch } from "react-redux";
-import { fetchFilters, activeFilterChanged } from "../../actions";
 import classNames from "classnames";
+
+import { useHttp } from "../../hooks/http.hook";
+import { activeFilterChanged } from "../../slices/filtersSlice";
+import {fetchFilters} from "../../actions";
 import Spinner from "../spinner/Spinner";
 
 // Задача для этого компонента:

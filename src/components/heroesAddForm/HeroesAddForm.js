@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { heroCreated } from "../../actions";
+import { heroCreated } from "../../slices/heroesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useHttp } from "../../hooks/http.hook";
 
